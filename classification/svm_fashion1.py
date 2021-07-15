@@ -38,10 +38,10 @@ def openlabel(path):
     return label
 
 
-img_train = openimage("C:\/Users/suew1/Documents/git/jh-git/data/train-images-idx3-ubyte") #training set images
-label_train = openlabel("C:\/Users/suew1/Documents/git/jh-git/data/train-labels-idx1-ubyte") #training set labels
-img_test = openimage("C:\/Users/suew1/Documents/git/jh-git/data/t10k-images-idx3-ubyte") #test set images
-label_test = openlabel("C:\/Users/suew1/Documents/git/jh-git/data/t10k-labels-idx1-ubyte") #test set labels
+img_train = openimage("data/train-images-idx3-ubyte") #training set images
+label_train = openlabel("data/train-labels-idx1-ubyte") #training set labels
+img_test = openimage("data/t10k-images-idx3-ubyte") #test set images
+label_test = openlabel("data/t10k-labels-idx1-ubyte") #test set labels
 
 print("Data Loading Complete")
 
