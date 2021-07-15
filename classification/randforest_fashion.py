@@ -3,8 +3,13 @@ from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, classification_report
 from struct import unpack
 from sklearn.ensemble import RandomForestClassifier
-
+from sklearn.neighbors import KNeighborsClassifier
+import argparse
 from time import time
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--randf', type=str )
+args = parser.parse_args()
 
 #open ubyte files function
 def openimage(path):
@@ -35,17 +40,18 @@ print("Data Loading Complete")
 
 #['T-shirt/top','Trouser','Pullover','Dress','Coat','Sandal','Shirt','Sneaker','Bag','Ankle boot']
 
-classifier=RandomForestClassifier(n_estimators=100)
+classifiers = {
+    'RF' : RandomForestClassifier(n_estimators=50),
+    'RF1' : RandomForestClassifier(n_estimators=100)
+}
 
 print("Train start")
-start = time()
-classifier.fit(img_train, label_train)
-end = time()
+classifiers[args.randf].fit(img_train, label_train)
 
-time = end - start
-pred = classifier.predict(img_test)
 
-#Time and Accuracy Score
-print('Train Time：%d분 %d초' % (time//60,time-60 * (time//60)))
+pred = classifiers.predict(img_test)
+print(args.randf)
+
+# Accuracy Score
 print("Accuracy= ", accuracy_score(pred, label_test))
 print(classification_report(label_test,pred))
