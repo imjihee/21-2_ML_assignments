@@ -35,6 +35,7 @@ print("Data Loading Complete")
 labels=['T-shirt/top','Trouser','Pullover','Dress','Coat','Sandal','Shirt','Sneaker','Bag','Ankle boot']
 
 def pca_to_2d(train, test):
+    print("before PCA shape = ", train.shape, test.shape)
     pca = PCA(n_components=2) # 784D -> 2D
     pca.fit(train)
     x_train = pca.transform(train)
