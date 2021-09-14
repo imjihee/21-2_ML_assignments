@@ -23,19 +23,13 @@ def reset_weights(m):
 class CustomDataset(Dataset):
     def __init__(self,input_array,target_array,transform=None):
         self.data=[]
-        #self.data.append((input_array,target_array))\
         
         for idx in range(1000):
             temp_target=target_array[idx]
             temp_input=input_array[idx][0:] ## erase outer []
             self.data.append([temp_input,temp_target])
 
-        #print("▷ print(self.data) is : ")
-        #print("▷ np.shape(self.data) is : ", np.shape(self.data))
-        #print("▷ len(self) is : ", len(self))
-
     def __len__(self):
-        #print("▷ len(self.data) is supposed to be 1000 : ", len(self.data))
         return len(self.data)
     
     def __getitem__(self,idx):
@@ -57,7 +51,8 @@ class SimpleConvNet(nn.Module):
             nn.ReLU(),
             nn.Linear(20, 10),
             nn.ReLU(),
-            nn.Linear(10,2)
+            nn.Linear(10,2),
+            nn.Softmax(dim=1)
         )
 
     def forward(self, x):
@@ -90,7 +85,7 @@ if __name__ == '__main__':
     print('--------------------------------')
     dataset=CustomDataset(input_data,target_data)
     
-    # K-fold Cross Validation model evaluation // train_ids, test_ids : 각 데이터의 인덱스 의미
+    # K-fold Cross Validation model evaluation // train_ids, test_ids : index of each data
     #enumerate 결과로 인해서, kfold.split function에 의해 인덱스가 출력되고 
     #해당 인덱스들에 fold라는 번호가 매겨진다.
     for fold, (train_ids, test_ids) in enumerate(kfold.split(dataset)):
@@ -101,7 +96,7 @@ if __name__ == '__main__':
         #train_ids: train index 900
         #print("test_ids in each fold: ", np.shape(test_ids)) #100개
         
-        # Sample elements randomly from a given list of ids, no replacement. (한 번 뽑은건 돌려놓지 않음)
+        # Sample elements randomly from a given list of ids, no replacement.
         train_subsampler = torch.utils.data.SubsetRandomSampler(train_ids)
         test_subsampler = torch.utils.data.SubsetRandomSampler(test_ids)
         #type : <class 'torch.utils.data.sampler.SubsetRandomSampler'>
@@ -112,7 +107,7 @@ if __name__ == '__main__':
         trainloader = torch.utils.data.DataLoader(
             dataset, 
             batch_size=10, sampler=train_subsampler) #mini batch 900
-        # _subsampler: 인덱스 가지고 있다.
+        # _subsampler: contains index
         testloader = torch.utils.data.DataLoader(
             dataset,
             batch_size=10, sampler=test_subsampler) #mini batch 100
@@ -138,7 +133,6 @@ if __name__ == '__main__':
                 # Get inputs adn targets
                 inputs = data['x'].float()
                 targets = data['y']                
-                #print(inputs)
                 # data : dictionary. x:input tensor, y:target tensor
 
                 # Zero the gradients
@@ -159,7 +153,7 @@ if __name__ == '__main__':
         
                 # Print statistics
                 current_loss += loss.item()
-                if i % 10 == 9:
+                if i % 10 == 29:
                     print('Loss after mini-batch %5d: %.3f' %
                           (i + 1, current_loss / 500))
                     current_loss = 0.0
@@ -198,7 +192,7 @@ if __name__ == '__main__':
             print('--------------------------------')
             results[fold] = 100.0 * (correct / total)
     
-      # Print fold results
+    # Print fold results
     print(f'K-FOLD CROSS VALIDATION RESULTS FOR {k_folds} FOLDS')
     print('--------------------------------')
     sum = 0.0
