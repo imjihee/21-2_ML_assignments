@@ -44,7 +44,7 @@ class SimpleConvNet(nn.Module):
     def __init__(self):
         super().__init__()
         self.layers = nn.Sequential(
-            nn.Linear(302, 50),
+            nn.Linear(312, 50),
             nn.ReLU(),
             nn.Linear(50, 20),
             nn.ReLU(),
@@ -72,9 +72,10 @@ if __name__ == '__main__':
 
     gen_temp = pd.read_csv('data\Genetic_alterations.csv',index_col=0)
     time_temp = pd.read_csv('data\Survival_time_event.csv',index_col=0)
+    clinic_temp= pd.read_csv('data\Clinical_Variables.csv',index_col=0)
     treat_temp = pd.read_csv('data\Treatment.csv',index_col=0)
     
-    input_data=np.concatenate((gen_temp, time_temp), axis=1) #concatenated input data
+    input_data=np.concatenate((gen_temp, time_temp, clinic_temp), axis=1) #concatenated input data
     target_data=treat_temp.to_numpy()
     
     # Define the K-fold Cross Validator
@@ -120,6 +121,7 @@ if __name__ == '__main__':
         correct, total = 0, 0
         #▶TRAINING◀
         # Run the training loop for defined number of epochs
+        network.train()
         for epoch in range(0, num_epochs):
             
             # Print epoch
@@ -181,6 +183,7 @@ if __name__ == '__main__':
         
         #▶TEST (EVALUATION)◀
         # Evaluationfor this fold USING TEST FOLD!!!!!
+        network.eval()
         correct, total = 0, 0
         with torch.no_grad():
             # Iterate over the test data and generate predictions
